@@ -8,7 +8,6 @@ class Spider():
     namePattern = '</i>([\s\S]*?)</span>'
     numberPattern = '<span class="video-number">([\s\S]*?)</span>'
 
-
     def __fetch_content(self):
         result = request.urlopen(Spider.url)
         htmls = result.read()
