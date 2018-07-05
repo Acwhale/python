@@ -1,5 +1,7 @@
 from urllib import  request
 import  re
+import xlsxwriter
+from pyecharts import Bar
 class Spider():
     #url地址
     url = 'https://www.panda.tv/cate/lol?pdt=1.24.s1.3.3j4r1vt315r'
@@ -41,8 +43,26 @@ class Spider():
             number *= 10000
         return number
     def __show(self,anchors):
+
+        workBook  = xlsxwriter.Workbook('demo.xlsx')
+        workSheet = workBook.add_worksheet()
+        workSheet.write('A1','排序')
+        workSheet.write('B1','名字')
+        workSheet.write('C1','人气')
+
+        bar = Bar("pandaTv", "LOL")
+        name = []
+        numbers = []
         for rank in range(0,len(anchors)):
+            workSheet.write('A'+str(rank+2),str(rank+1))
+            workSheet.write('B'+str(rank+2),anchors[rank]['name'])
+            workSheet.write('C'+str(rank+2),anchors[rank]['number'])
+            name.append(anchors[rank]['name'])
+            numbers.append(anchors[rank]['number'])
             print('排序:' + str(rank+1) + ':' + anchors[rank]['name'] + "  "+anchors[rank]['number'])
+        workBook.close()
+        bar.add('LOL',name,numbers)
+        bar.render()
     def go(self):
         htmls = self.__fetch_content()
         anchors = self.__analysis(htmls)
